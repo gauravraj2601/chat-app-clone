@@ -49,7 +49,13 @@ const ChatBox = () => {
       <hr className="border-t-2" />
       <div className="h-[879px] flex flex-col justify-between border-r-2 border-b-2  border-gray-200">
         {/* // chat box */}
-        <div className="h-[693px] p-6 flex flex-col gap-[32px] bg-background">
+        <div className="h-[780px] p-6 flex flex-col gap-[32px] bg-background overflow-scroll scrollbar-none">
+          <SenderChat chat={"How are you?"} />
+          <UserChat chat={"I am good, How about You?"} />
+          <SenderChat chat={"How are you?"} />
+          <UserChat chat={"I am good, How about You?"} />
+          <SenderChat chat={"How are you?"} />
+          <UserChat chat={"I am good, How about You?"} />
           <SenderChat chat={"How are you?"} />
           <UserChat chat={"I am good, How about You?"} />
           <SenderChat chat={"How are you?"} />

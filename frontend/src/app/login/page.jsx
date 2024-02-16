@@ -17,10 +17,10 @@ const Login = () => {
   const router= useRouter();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const {user, setUser } = useContext(AuthContext);
- console.log(user)
+//  console.log(user)
   const submitHandler = async () => {
     setLoading(true);
     if (!email || !password) {

@@ -81,9 +81,9 @@ const Signup = () => {
   
   };
 
-  const postDetails = (pics:any) => {
+  const postDetails = (files: FileList | null) => {
     setPicLoading(true);
-    if (pics === undefined) {
+    if (!files || files.length === 0) {
       toast({
         title: "Please Select an Image!",
         status: "warning",
@@ -91,8 +91,10 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+      setPicLoading(false);
       return;
     }
+    const pics = files[0];
     console.log(pics);
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
@@ -125,6 +127,7 @@ const Signup = () => {
       return;
     }
   };
+  
 
   return (
     <VStack w="500px" m="auto" mt="30px" spacing="5px">
@@ -179,7 +182,12 @@ const Signup = () => {
           type="file"
           p={1.5}
           accept="image/*"
-          onChange={(e) => postDetails(e.target.files[0])}
+          onChange={(e) => {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+              // postDetails(files[0]);
+            }
+          }}
         />
       </FormControl>
       <Button

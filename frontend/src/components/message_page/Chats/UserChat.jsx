@@ -2,11 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 import avatar from '../../../assets/Frame 10.png';
 
-interface UserChatProps {
-  chat: string; // Assuming chat is a string, adjust the type accordingly
-}
 
-const UserChat: React.FC<UserChatProps> = ({ chat }) => {
+const UserChat= ({ chat }) => {
   return (
     <div>
       <div className="flex justify-end gap-4">

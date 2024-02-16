@@ -2,11 +2,8 @@ import React from "react";
 import Image from "next/image";
 import avatar from "../../../assets/Frame 10.png";
 
-interface SenderChatProps {
-  chat: string; // Assuming chat is a string, adjust the type accordingly
-}
 
-const SenderChat: React.FC<SenderChatProps> = ({ chat }) => {
+const SenderChat = ({ chat }) => {
   return (
     <div>
       <div className="flex gap-4">
