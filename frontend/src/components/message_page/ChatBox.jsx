@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import avatar from "../../assets/Frame 10.png";
 import online from "../../assets/online.svg";
@@ -7,7 +7,53 @@ import media from "../../assets/media.svg";
 import send from "../../assets/send.svg";
 import SenderChat from "./Chats/SenderChat";
 import UserChat from "./Chats/UserChat";
+import { Spinner, useToast } from "@chakra-ui/react";
+import { useAuth } from "../../app/auth-provider";
+import axios from "axios";
 const ChatBox = () => {
+
+  const {auth, setAuth, user, setUser, selectedChat, setSelectedChat, chats, setChats}= useAuth();
+
+
+  const [messages, setMessages]= useState([]);
+  const [loading, setLoading]= useState(false);
+  const [newMessage, setNewMessage]= useState("");
+  const [typing, setTyping]= useState(false);
+  const [isTyping, setIsTyping]= useState(false);
+  const toast= useToast()
+
+
+  const sendMessage=async(event)=>{
+    if(event.key === "Enter" && newMessage){
+      try {
+        const config={
+          headers:{
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`
+          }
+        };
+
+        const {data}= await axios.post("http://localhost:8080/api/message",{
+            content: newMessage,
+            chatId: selectedChat._id,
+        },
+        config
+        );
+        console.log(messages)
+        setNewMessage("")
+        setMessages([...messages, data])
+      } catch (error) {
+        console.log("error")
+        // show a toast which will display the error message that- Failed to send the Message
+      }
+    }
+  }
+  const typingHandler=(e)=>{
+    console.log(e.target.value)
+    setNewMessage(e.target.value);
+
+    // Typing Indicator Logic
+  }
   return (
     <div className="w-[640px]  bg-background  ">
       <div className="h-20 bg-background flex justify-between items-center p-6 ">
@@ -49,19 +95,28 @@ const ChatBox = () => {
       <hr className="border-t-2" />
       <div className="h-[879px] flex flex-col justify-between border-r-2 border-b-2  border-gray-200">
         {/* // chat box */}
-        <div className="h-[780px] p-6 flex flex-col gap-[32px] bg-background overflow-scroll scrollbar-none">
-          <SenderChat chat={"How are you?"} />
-          <UserChat chat={"I am good, How about You?"} />
-          <SenderChat chat={"How are you?"} />
-          <UserChat chat={"I am good, How about You?"} />
-          <SenderChat chat={"How are you?"} />
-          <UserChat chat={"I am good, How about You?"} />
-          <SenderChat chat={"How are you?"} />
-          <UserChat chat={"I am good, How about You?"} />
-          <SenderChat chat={"How are you?"} />
-          <UserChat chat={"I am good, How about You?"} />
-          <SenderChat chat={"How are you?"} />
-          <UserChat chat={"I am good, How about You?"} />
+        <div className="h-[780px] p-6 flex flex-col gap-[32px] overflow-scroll scrollbar-none bg-gray-300 ">
+          {/* loading */}
+          {loading ?(
+            <Spinner size={"xl"} w={"150px"} h={"150px"} ml={"30%"} thickness='4px' color='red.500' speed='0.65s'
+            emptyColor='gray.100' margin="auto" alignSelf="center" />
+          ):(
+            <>
+            {/* All Messagess */}
+            <SenderChat chat={"How are you?"} />
+            <UserChat chat={"I am good, How about You?"} />
+            <SenderChat chat={"How are you?"} />
+            <UserChat chat={"I am good, How about You?"} />
+            <SenderChat chat={"How are you?"} />
+            <UserChat chat={"I am good, How about You?"} />
+            <SenderChat chat={"How are you?"} />
+            <UserChat chat={"I am good, How about You?"} />
+            <SenderChat chat={"How are you?"} />
+            <UserChat chat={"I am good, How about You?"} />
+            <SenderChat chat={"How are you?"} />
+            <UserChat chat={"I am good, How about You?"} />
+            </>
+          )}
         </div>
 
         <div className="h-[96px] p-6 flex justify-center items-center gap-6 bg-background">
@@ -76,6 +131,10 @@ const ChatBox = () => {
                 className="w-[450px] font border-none focus:border-none outline-none"
                 type="text"
                 placeholder="Type a message"
+                onKeyDown={sendMessage}
+                // sendMessage
+                value={newMessage}
+                onChange={typingHandler}
               />{" "}
             </div>
             <div>

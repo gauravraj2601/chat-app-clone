@@ -46,7 +46,7 @@ const MessageBox = ({chats}) => {
     </div>
  </div>
     ))}
-    </>                      // bg box
+    </>                      
   );
 };
 
