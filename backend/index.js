@@ -4,6 +4,7 @@ const { connection } = require("./db");
 const { userRoute } = require("./routes/users.routes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const { chatRoute } = require("./routes/chat.routes");
+const { messageRouter } = require("./routes/message.routes");
 
 const app= express();
 
@@ -12,6 +13,9 @@ app.use(cors())
 
 app.use("/api",userRoute)
 app.use("/api/chat", chatRoute)
+app.use("/api/message", messageRouter)
+
+
 app.use(notFound)
 app.use(errorHandler)
 
