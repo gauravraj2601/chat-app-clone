@@ -76,8 +76,6 @@ const ChatBox = () => {
           },
           config
         );
-        console.log(messages);
-        console.log("clicked");
         setMessages([...messages, data]);
       } catch (error) {
         console.log("error");
@@ -86,7 +84,6 @@ const ChatBox = () => {
     }
   };
   const typingHandler = (e) => {
-    console.log(e.target.value);
     setNewMessage(e.target.value);
 
     // Typing Indicator Logic
@@ -95,7 +92,6 @@ const ChatBox = () => {
   useEffect(() => {
     fetchMessages();
   }, [selectedChat]);
-  console.log(selectedChat);
 
   return (
     <div className="w-[640px]  bg-background  ">
