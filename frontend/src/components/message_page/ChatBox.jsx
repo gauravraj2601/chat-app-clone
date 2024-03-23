@@ -10,50 +10,93 @@ import UserChat from "./Chats/UserChat";
 import { Spinner, useToast } from "@chakra-ui/react";
 import { useAuth } from "../../app/auth-provider";
 import axios from "axios";
+import { getSender, isLastMessage } from "../config/ChatLogin";
 const ChatBox = () => {
+  const {
+    auth,
+    setAuth,
+    user,
+    setUser,
+    selectedChat,
+    setSelectedChat,
+    chats,
+    setChats,
+  } = useAuth();
 
-  const {auth, setAuth, user, setUser, selectedChat, setSelectedChat, chats, setChats}= useAuth();
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [newMessage, setNewMessage] = useState("");
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const toast = useToast();
 
+  const fetchMessages = async () => {
+    if (!selectedChat) return;
 
-  const [messages, setMessages]= useState([]);
-  const [loading, setLoading]= useState(false);
-  const [newMessage, setNewMessage]= useState("");
-  const [typing, setTyping]= useState(false);
-  const [isTyping, setIsTyping]= useState(false);
-  const toast= useToast()
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      setLoading(true);
+      const { data } = await axios.get(
+        `http://localhost:8080/api/message/${selectedChat._id}`,
+        config
+      );
+      console.log(data);
+      setMessages(data);
+      setLoading(false);
+    } catch (error) {
+      console.log("fetchMessage", error);
+    }
+  };
 
-
-  const sendMessage=async(event)=>{
-    if(event.key === "Enter" && newMessage){
+  const sendMessage = async (event) => {
+    // if(event.key === "Enter" && newMessage){
+    if (
+      (event.key === "Enter" && newMessage) ||
+      (newMessage && event.type === "click")
+    ) {
       try {
-        const config={
-          headers:{
+        const config = {
+          headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`
-          }
+            Authorization: `Bearer ${user.token}`,
+          },
         };
 
-        const {data}= await axios.post("http://localhost:8080/api/message",{
+        setNewMessage("");
+        const { data } = await axios.post(
+          "http://localhost:8080/api/message",
+          {
             content: newMessage,
             chatId: selectedChat._id,
-        },
-        config
+          },
+          config
         );
-        console.log(messages)
-        setNewMessage("")
-        setMessages([...messages, data])
+        console.log(messages);
+        console.log("clicked");
+        setMessages([...messages, data]);
       } catch (error) {
-        console.log("error")
+        console.log("error");
         // show a toast which will display the error message that- Failed to send the Message
       }
     }
-  }
-  const typingHandler=(e)=>{
-    console.log(e.target.value)
+  };
+  const typingHandler = (e) => {
+    console.log(e.target.value);
     setNewMessage(e.target.value);
 
     // Typing Indicator Logic
-  }
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, [selectedChat]);
+  console.log(selectedChat);
+
   return (
     <div className="w-[640px]  bg-background  ">
       <div className="h-20 bg-background flex justify-between items-center p-6 ">
@@ -70,7 +113,7 @@ const ChatBox = () => {
           </div>
           <div className="w-[111px] h-[43px] flex flex-col justify-center items-start ">
             <div className=" font-inter text-[20px] leading-[25px] text-[#000000] ">
-              <p>Group Chat</p>
+              <p>{selectedChat?.users[1]?.name}</p>
             </div>
             <div className="flex justify-start items-center  gap-2">
               <div>
@@ -97,24 +140,40 @@ const ChatBox = () => {
         {/* // chat box */}
         <div className="h-[780px] p-6 flex flex-col gap-[32px] overflow-scroll scrollbar-none bg-gray-300 ">
           {/* loading */}
-          {loading ?(
-            <Spinner size={"xl"} w={"150px"} h={"150px"} ml={"30%"} thickness='4px' color='red.500' speed='0.65s'
-            emptyColor='gray.100' margin="auto" alignSelf="center" />
-          ):(
+          {loading ? (
+            <Spinner
+              size={"xl"}
+              w={"150px"}
+              h={"150px"}
+              ml={"30%"}
+              thickness="4px"
+              color="red.500"
+              speed="0.65s"
+              emptyColor="gray.100"
+              margin="auto"
+              alignSelf="center"
+            />
+          ) : (
             <>
-            {/* All Messagess */}
-            <SenderChat chat={"How are you?"} />
-            <UserChat chat={"I am good, How about You?"} />
-            <SenderChat chat={"How are you?"} />
-            <UserChat chat={"I am good, How about You?"} />
-            <SenderChat chat={"How are you?"} />
-            <UserChat chat={"I am good, How about You?"} />
-            <SenderChat chat={"How are you?"} />
-            <UserChat chat={"I am good, How about You?"} />
-            <SenderChat chat={"How are you?"} />
-            <UserChat chat={"I am good, How about You?"} />
-            <SenderChat chat={"How are you?"} />
-            <UserChat chat={"I am good, How about You?"} />
+              {/* All Messagess */}
+              {messages &&
+                messages.map((m, i) =>
+                  m.sender._id === user._id ? (
+                    <UserChat key={i} chat={m.content} />
+                    ) : (
+                    <SenderChat key={i} chat={m.content} />
+                  )
+                )}
+              {/* <SenderChat chat={"How are you?"} />
+              <UserChat chat={"I am good, How about You?"} />
+              <SenderChat chat={"How are you?"} />
+              <UserChat chat={"I am good, How about You?"} />
+              <SenderChat chat={"How are you?"} />
+              <UserChat chat={"I am good, How about You?"} />
+              <SenderChat chat={"How are you?"} />
+              <UserChat chat={"I am good, How about You?"} />
+              <SenderChat chat={"How are you?"} />
+              <UserChat chat={"I am good, How about You?"} /> */}
             </>
           )}
         </div>
@@ -137,7 +196,7 @@ const ChatBox = () => {
                 onChange={typingHandler}
               />{" "}
             </div>
-            <div>
+            <div onClick={sendMessage}>
               {" "}
               <Image src={send} alt="send" width={24} height={24} />{" "}
             </div>
