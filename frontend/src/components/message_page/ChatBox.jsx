@@ -12,7 +12,6 @@ import { useAuth } from "../../app/auth-provider";
 import axios from "axios";
 import {api} from "../../api/api"
 
-import { getSender, isLastMessage } from "../config/ChatLogin";
 const ChatBox = () => {
   const {
     auth,
@@ -93,7 +92,7 @@ const ChatBox = () => {
 
   useEffect(() => {
     fetchMessages();
-  }, [selectedChat]);
+  }, [selectedChat, fetchMessages]);
 
   return (
     <div className="w-[640px]  bg-background  ">

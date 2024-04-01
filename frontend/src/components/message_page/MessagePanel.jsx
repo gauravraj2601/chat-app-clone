@@ -45,7 +45,7 @@ const MessagePanel = () => {
     if (user) { // Add this check
       fetchChats();
     }
-  }, [user]);
+  }, [user, fetchChats]);
 
   // console.log(loggedUser)
   // console.log(user)
