@@ -6,23 +6,22 @@ import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { VStack } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import {api} from "../../api/api"
 
 const Signup = () => {
-  const [show, setShow] = useState<boolean>(false);
+  const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const toast = useToast();
   const router= useRouter();
-  // const cld = new Cloudinary({cloud: {cloudName: 'gauravcoder'}});
 
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [confirmpassword, setConfirmpassword] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [avatar, setAvatar] = useState<any>();
-  const [picLoading, setPicLoading] = useState<boolean>(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [confirmpassword, setConfirmpassword] = useState("");
+  const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [picLoading, setPicLoading] = useState(false);
 
   const submitHandler =  () => {
     setPicLoading(true);
@@ -82,7 +81,7 @@ const Signup = () => {
   
   };
 
-  const postDetails = (files: FileList | null) => {
+  const postDetails = () => {
     setPicLoading(true);
     if (!files || files.length === 0) {
       toast({
