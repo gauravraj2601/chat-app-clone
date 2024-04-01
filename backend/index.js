@@ -5,7 +5,7 @@ const { userRoute } = require("./routes/users.routes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const { chatRoute } = require("./routes/chat.routes");
 const { messageRouter } = require("./routes/message.routes");
-
+require("dotenv").config()
 const app= express();
 
 app.use(express.json())
@@ -25,10 +25,10 @@ app.get("/",async(req, res)=>{
 })
 
 
-app.listen(8080,async()=>{
+app.listen(process.env.PORT,async()=>{
     try {
         await connection
-        console.log("Server is running ")
+        console.log(`Server is running on PORT ${process.env.PORT}`)
     } catch (error) {
         console.error(error.message)
     }
