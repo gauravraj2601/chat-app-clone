@@ -6,6 +6,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import User_Box from './User_Box';
 import { Spinner } from '@chakra-ui/react'
 import { useRouter } from "next/navigation";
+import {api} from "../../api/api"
+
 const Searchuser = () => {
     const [loading, setLoading]=useState(false)
     const [search, setSearch]= useState("");
@@ -29,7 +31,7 @@ const Searchuser = () => {
                 Authorization: `Bearer ${user?.token}`
               }
             }
-            const url = search !== "" ? `http://localhost:8080/api/users?search=${search}` : "http://localhost:8080/api/users";
+            const url = search !== "" ? `${api}/users?search=${search}` : "http://localhost:8080/api/users";
             const { data } = await axios.get(url, config);
            setLoading(false);
             setSearchResult(data);
@@ -65,7 +67,7 @@ const Searchuser = () => {
               Authorization: `Bearer ${user.token}`,
             },
           };
-          const { data } = await axios.post(`http://localhost:8080/api/chat`, { userId }, config);
+          const { data } = await axios.post(`${api}/chat`, { userId }, config);
     
           if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
           console.log(data)

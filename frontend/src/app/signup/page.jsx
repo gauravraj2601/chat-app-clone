@@ -8,6 +8,7 @@ import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {api} from "../../api/api"
 
 const Signup = () => {
   const [show, setShow] = useState<boolean>(false);
@@ -48,7 +49,7 @@ const Signup = () => {
     }
     console.log(name, email, password, avatar);
     
-    axios.post("http://localhost:8080/api/register",
+    axios.post(`${api}/register`,
         {
           name,
           email,

@@ -6,6 +6,7 @@ import MessageBox from "../sub-components/MessageBox";
 import {  useAuth } from "../../app/auth-provider";
 import { Spinner, useToast } from "@chakra-ui/react";
 import axios from "axios";
+import {api} from "../../api/api"
 const MessagePanel = () => {
 
   const {auth,selectedChat, setSelectedChat, user, chats, setChats  }= useAuth();
@@ -23,7 +24,7 @@ const MessagePanel = () => {
         },
       };
 
-      const { data } = await axios.get("http://localhost:8080/api/chat", config);
+      const { data } = await axios.get(`${api}/chat`, config);
       // console.log(data)
       setChats(data);
     } catch (error) {

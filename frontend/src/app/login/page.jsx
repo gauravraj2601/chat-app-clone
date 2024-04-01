@@ -10,7 +10,7 @@ import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { AuthContext } from "../auth-provider";
 import { useRouter } from "next/navigation";
-
+import {api} from "../../api/api"
 const Login = () => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
@@ -34,7 +34,7 @@ const Login = () => {
       setLoading(false);
       return;
     }
-    axios.post("http://localhost:8080/api/login",
+    axios.post(`${api}/login`,
         {
           email,
           password

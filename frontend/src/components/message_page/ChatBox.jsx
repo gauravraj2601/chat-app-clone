@@ -10,6 +10,8 @@ import UserChat from "./Chats/UserChat";
 import { Spinner, useToast } from "@chakra-ui/react";
 import { useAuth } from "../../app/auth-provider";
 import axios from "axios";
+import {api} from "../../api/api"
+
 import { getSender, isLastMessage } from "../config/ChatLogin";
 const ChatBox = () => {
   const {
@@ -42,7 +44,7 @@ const ChatBox = () => {
       };
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:8080/api/message/${selectedChat._id}`,
+        `${api}/message/${selectedChat._id}`,
         config
       );
       console.log(data);
@@ -69,7 +71,7 @@ const ChatBox = () => {
 
         setNewMessage("");
         const { data } = await axios.post(
-          "http://localhost:8080/api/message",
+          `${api}/message`,
           {
             content: newMessage,
             chatId: selectedChat._id,
